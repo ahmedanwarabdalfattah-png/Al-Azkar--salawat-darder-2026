@@ -1,3 +1,16 @@
+const CACHE_NAME = 'azkar-v1';
+const assets = ['./index.html', './manifest.json'];
+
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(assets))
+    );
+});
+
 self.addEventListener('fetch', (event) => {
-  // This basic script allows the 'Install' prompt to appear
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
 });
